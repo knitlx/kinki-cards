@@ -5,12 +5,15 @@ import LangToggle from "@/components/LangToggle";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-red-950/40 bg-zinc-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-2xl items-center justify-between px-4">
         <div className="flex items-center gap-2.5">
-          <span className="h-2 w-2 rounded-full bg-rose-600 shadow-[0_0_10px_rgba(225,29,72,0.9)] animate-pulse" />
-          <span className="text-lg font-black tracking-widest text-zinc-100 uppercase">
-            KINKI <span className="text-rose-500">CARDS</span>
+          <span
+            aria-hidden
+            className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_rgba(212,32,47,0.6)]"
+          />
+          <span className="text-lg font-black uppercase tracking-widest text-foreground">
+            KINKI <span className="text-accent">CARDS</span>
           </span>
         </div>
         <LangToggle />

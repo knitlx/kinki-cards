@@ -8,17 +8,17 @@ export default function LangToggle() {
   const { lang, setLang } = useI18n();
 
   return (
-    <div className="flex items-center rounded-full border border-zinc-800 bg-zinc-900/80 p-0.5">
+    <div className="flex items-center rounded-full border border-border/40 bg-surface p-0.5">
       {LANGS.map((l) => (
         <button
           key={l}
           type="button"
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className={`rounded-full px-3 py-1 text-xs font-bold uppercase transition-all ${
+          className={`rounded-full px-3 py-1 text-xs font-bold uppercase transition-colors ${
             lang === l
-              ? "bg-rose-600 text-white shadow-md shadow-rose-950/50"
-              : "text-zinc-400 hover:text-zinc-200"
+              ? "bg-accent text-foreground"
+              : "text-muted hover:text-foreground"
           }`}
         >
           {l}

@@ -70,12 +70,12 @@ export default function HostControls({
   const deckEmpty = state.counts[activeLevel].remaining === 0;
 
   return (
-    <section className="flex flex-col gap-3 rounded-3xl border border-red-950/40 bg-zinc-900/60 p-4 shadow-xl backdrop-blur-md">
+    <section className="flex flex-col gap-3 rounded-3xl border border-border/40 bg-surface p-4 shadow-xl shadow-black/40 backdrop-blur-md">
       <button
         type="button"
         onClick={() => post("next")}
         disabled={busy || deckEmpty}
-        className="min-h-13 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-3 text-lg font-bold tracking-wide text-white shadow-lg shadow-red-950/60 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
+        className="min-h-13 rounded-2xl bg-accent px-5 py-3 text-lg font-bold tracking-wide text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
       >
         {busy ? t("loading") : t("next")}
       </button>
@@ -86,10 +86,10 @@ export default function HostControls({
             type="button"
             onClick={() => changeLevel(l)}
             aria-pressed={activeLevel === l}
-            className={`min-h-12 flex-1 rounded-2xl px-3 py-2 text-lg font-bold tracking-widest transition-all active:scale-95 ${
+            className={`min-h-12 flex-1 rounded-2xl px-3 py-2 text-lg font-bold tracking-widest transition-colors active:scale-95 ${
               activeLevel === l
-                ? "border border-rose-500/80 bg-rose-600 text-white shadow-md shadow-rose-950/50"
-                : "border border-zinc-800 bg-zinc-900/80 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200"
+                ? "bg-accent text-foreground shadow-md shadow-accent/20"
+                : "border border-border/40 bg-surface-raised text-muted hover:text-foreground"
             }`}
           >
             {t(`level_${l}`)}
@@ -101,7 +101,7 @@ export default function HostControls({
         type="button"
         onClick={() => post("reshuffle")}
         disabled={busy}
-        className="min-h-11 rounded-2xl border border-zinc-800 bg-zinc-950/60 px-5 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:border-zinc-700 hover:text-zinc-200 active:scale-[0.98] disabled:opacity-40"
+        className="min-h-11 rounded-2xl border border-border/40 bg-surface-raised px-5 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-foreground active:scale-[0.98] disabled:opacity-40"
       >
         {t("reshuffle")}
       </button>
