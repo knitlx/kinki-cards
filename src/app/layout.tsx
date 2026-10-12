@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import { I18nProvider } from "@/lib/i18n";
@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: "KINKI CARDS",
   description:
     "Realtime synchronized party card game for kink and shibari parties.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0B0B0C",
 };
 
 
