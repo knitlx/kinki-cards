@@ -3,7 +3,16 @@ export type Level = (typeof LEVELS)[number];
 
 export type RoomStatus = "lobby" | "playing" | "empty";
 
-export type Card = { id: string; level: Level; body: string; bodyEn: string | null; sort: number };
+export type CardKind = "action" | "question";
+
+export type Card = {
+  id: string;
+  level: Level;
+  body: string;
+  bodyEn: string | null;
+  sort: number;
+  kind?: CardKind;
+};
 
 export type Participant = { id: string; name: string; isHost: boolean };
 

@@ -22,6 +22,10 @@ export function useRoom(code: string) {
     }
   }, [code]);
 
+  const updateState = useCallback((next: RoomState) => {
+    setState(next);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     let client: SupabaseClient | null = null;
@@ -61,5 +65,5 @@ export function useRoom(code: string) {
     };
   }, [code, refresh]);
 
-  return { state, online, refresh, notFound };
+  return { state, online, refresh, updateState, notFound };
 }

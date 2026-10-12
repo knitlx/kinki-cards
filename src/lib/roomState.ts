@@ -1,13 +1,60 @@
 import { supabaseAdmin } from "./supabase/server";
 import { broadcastRoomState } from "./broadcast";
-import { LEVELS, type Card, type Level, type RoomState } from "./types";
+import { LEVELS, type Card, type CardKind, type Level, type RoomState } from "./types";
+
+export function getCardKind(body: string): CardKind {
+  const b = body.trim();
+  if (
+    b.startsWith("Расскажи") ||
+    b.startsWith("Спроси") ||
+    b.startsWith("Задай вопрос") ||
+    b.startsWith("Был ли") ||
+    b.startsWith("Как тебе") ||
+    b.startsWith("Какой") ||
+    b.startsWith("Какая") ||
+    b.includes("и спроси") ||
+    b.includes("Обсудите") ||
+    b.includes("Поговорите с этим игроком")
+  ) {
+    return "question";
+  }
+  return "action";
+}
+
+let cardsCache: Map<string, Card> | null = null;
+
+async function getCardsMap(): Promise<Map<string, Card>> {
+  if (cardsCache) return cardsCache;
+  const db = supabaseAdmin();
+  const { data } = await db.from("cards").select("*");
+  const map = new Map<string, Card>();
+  for (const c of data ?? []) {
+    map.set(c.id, {
+      id: c.id,
+      level: c.level as Level,
+      body: c.body,
+      bodyEn: c.body_en ?? null,
+      sort: c.sort,
+      kind: getCardKind(c.body),
+    });
+  }
+  cardsCache = map;
+  return map;
+}
+
 
 export async function getRoomState(code: string): Promise<RoomState | null> {
   const db = supabaseAdmin();
-  const { data: room } = await db.from("rooms").select("*").eq("code", code).maybeSingle();
+  const [roomRes, decksRes, cardsMap] = await Promise.all([
+    db.from("rooms").select("*").eq("code", code).maybeSingle(),
+    db.from("room_decks").select("*").eq("room_code", code),
+    getCardsMap(),
+  ]);
+
+  const room = roomRes.data;
   if (!room) return null;
 
-  const { data: decks } = await db.from("room_decks").select("*").eq("room_code", code);
+  const decks = decksRes.data;
   const counts = Object.fromEntries(
     LEVELS.map((l) => {
       const d = decks?.find((x) => x.level === l);
@@ -15,22 +62,7 @@ export async function getRoomState(code: string): Promise<RoomState | null> {
     }),
   ) as RoomState["counts"];
 
-  let activeCard: Card | null = null;
-  if (room.active_card_id) {
-    const { data: c } = await db.from("cards").select("*").eq("id", room.active_card_id).maybeSingle();
-    if (c) {
-      activeCard = {
-        id: c.id,
-        level: c.level as Level,
-        body: c.body,
-        bodyEn: c.body_en ?? null,
-        sort: c.sort,
-      };
-    }
-  }
-
-  const { data: parts } = await db
-    .from("participants").select("id,name,is_host").eq("room_code", code).order("joined_at");
+  const activeCard = room.active_card_id ? (cardsMap.get(room.active_card_id) ?? null) : null;
 
   return {
     code: room.code,
@@ -38,12 +70,15 @@ export async function getRoomState(code: string): Promise<RoomState | null> {
     currentLevel: room.current_level as Level,
     activeCard,
     counts,
-    participants: (parts ?? []).map((p) => ({ id: p.id, name: p.name, isHost: p.is_host })),
+    participants: [],
   };
 }
 
 export async function pushRoomState(code: string) {
   const state = await getRoomState(code);
-  if (state) await broadcastRoomState(code, state);
+  if (state) {
+    void broadcastRoomState(code, state).catch(console.error);
+  }
   return state;
 }
+

@@ -7,22 +7,19 @@ import { useI18n } from "@/lib/i18n";
 export default function Home() {
   const { t } = useI18n();
   const router = useRouter();
-  const [createName, setCreateName] = useState("");
-  const [joinName, setJoinName] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function createRoom(e: FormEvent) {
     e.preventDefault();
-    const trimmed = createName.trim();
-    if (!trimmed || busy) return;
+    if (busy) return;
     setBusy(true);
     setError(null);
     const res = await fetch("/api/rooms", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name: trimmed }),
+      body: JSON.stringify({}),
     });
     if (!res.ok) {
       setBusy(false);
@@ -32,100 +29,78 @@ export default function Home() {
     const data = (await res.json()) as {
       code: string;
       hostSecret: string;
-      participantId: string;
     };
-    localStorage.setItem("party:name", trimmed);
     localStorage.setItem(`party:hostSecret:${data.code}`, data.hostSecret);
-    localStorage.setItem(`party:participantId:${data.code}`, data.participantId);
     router.push(`/room/${data.code}`);
   }
 
   async function joinRoom(e: FormEvent) {
     e.preventDefault();
-    const trimmed = joinName.trim();
     const roomCode = code.trim().toUpperCase();
-    if (!trimmed || !roomCode || busy) return;
+    if (!roomCode || busy) return;
     setBusy(true);
     setError(null);
-    const res = await fetch(`/api/rooms/${roomCode}/join`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name: trimmed }),
-    });
-    if (res.status === 404) {
-      setBusy(false);
-      setError(t("roomNotFound"));
-      return;
-    }
-    if (!res.ok) {
-      setBusy(false);
-      setError(t("genericError"));
-      return;
-    }
-    const data = (await res.json()) as { participantId: string };
-    localStorage.setItem("party:name", trimmed);
-    localStorage.setItem(`party:participantId:${roomCode}`, data.participantId);
     router.push(`/room/${roomCode}`);
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 p-4 py-8">
-      <h1 className="text-center text-3xl font-bold tracking-tight">{t("appTitle")}</h1>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-4 py-8">
+      <div className="flex flex-col items-center gap-2 text-center">
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight uppercase bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+          KINKI <span className="text-rose-600">CARDS</span>
+        </h1>
+        <p className="text-sm font-medium text-zinc-400">
+          Party game • Synchronized in realtime
+        </p>
+      </div>
 
       <form
         onSubmit={createRoom}
-        className="flex flex-col gap-4 rounded-2xl border border-black/10 p-4 dark:border-white/15"
+        className="flex flex-col gap-4 rounded-3xl border border-red-950/40 bg-zinc-900/60 p-6 text-center shadow-xl backdrop-blur-md transition-all hover:border-red-900/60"
       >
-        <h2 className="text-xl font-semibold">{t("createRoom")}</h2>
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          {t("yourName")}
-          <input
-            value={createName}
-            onChange={(e) => setCreateName(e.target.value)}
-            className="w-full rounded-xl border border-black/15 bg-transparent px-4 py-3 text-lg outline-none focus:border-foreground dark:border-white/20"
-          />
-        </label>
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-bold text-zinc-100">{t("createRoom")}</h2>
+          <p className="text-xs text-zinc-400">Start a new game as host</p>
+        </div>
         <button
           type="submit"
-          disabled={busy || !createName.trim()}
-          className="min-h-12 rounded-xl bg-foreground px-5 py-3 text-lg font-semibold text-background transition-opacity disabled:opacity-40"
+          disabled={busy}
+          className="min-h-13 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-3 text-lg font-bold text-white shadow-lg shadow-red-950/60 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
         >
-          {t("createRoom")}
+          {busy ? t("loading") : t("createRoom")}
         </button>
       </form>
 
       <form
         onSubmit={joinRoom}
-        className="flex flex-col gap-4 rounded-2xl border border-black/10 p-4 dark:border-white/15"
+        className="flex flex-col gap-4 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 p-6 text-center shadow-lg backdrop-blur-md transition-all hover:border-zinc-700"
       >
-        <h2 className="text-xl font-semibold">{t("joinRoom")}</h2>
-        <label className="flex flex-col gap-1 text-sm font-medium">
-          {t("yourName")}
-          <input
-            value={joinName}
-            onChange={(e) => setJoinName(e.target.value)}
-            className="w-full rounded-xl border border-black/15 bg-transparent px-4 py-3 text-lg outline-none focus:border-foreground dark:border-white/20"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-medium">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-bold text-zinc-100">{t("joinRoom")}</h2>
+          <p className="text-xs text-zinc-400">Join an existing room using code</p>
+        </div>
+        <label className="flex flex-col gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
           {t("enterCode")}
           <input
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             autoCapitalize="characters"
-            className="w-full rounded-xl border border-black/15 bg-transparent px-4 py-3 text-lg uppercase tracking-widest outline-none focus:border-foreground dark:border-white/20"
+            placeholder="ABCD"
+            maxLength={6}
+            className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/80 px-4 py-3 text-center text-2xl font-bold tracking-[0.25em] text-white outline-none transition-all placeholder:text-zinc-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
           />
         </label>
         <button
           type="submit"
-          disabled={busy || !joinName.trim() || !code.trim()}
-          className="min-h-12 rounded-xl bg-foreground px-5 py-3 text-lg font-semibold text-background transition-opacity disabled:opacity-40"
+          disabled={busy || !code.trim()}
+          className="min-h-12 rounded-2xl border border-zinc-700 bg-zinc-800/80 px-5 py-3 text-base font-bold text-zinc-100 transition-all hover:bg-zinc-700 active:scale-[0.98] disabled:opacity-40"
         >
-          {t("joinRoom")}
+          {t("join")}
         </button>
       </form>
 
-      {error && <p className="text-center font-medium text-red-600">{error}</p>}
+      {error && <p className="text-center text-sm font-semibold text-rose-500">{error}</p>}
     </main>
   );
+
 }

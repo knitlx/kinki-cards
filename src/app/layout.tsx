@@ -15,10 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Карточки для вечеринки",
+  title: "KINKI CARDS",
   description:
-    "Общая колода карточек для вечеринки: ведущий выбирает карточки, все участники видят одну и ту же карточку в реальном времени.",
+    "Realtime synchronized party card game for kink and shibari parties.",
 };
+
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

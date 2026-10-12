@@ -6,13 +6,13 @@ export type Lang = "ru" | "en";
 
 const dict = {
   ru: {
-    appTitle: "Карточки для вечеринки",
-    createRoom: "Создать комнату",
-    joinRoom: "Войти в комнату",
+    appTitle: "KINKI CARDS",
+    createRoom: "Создать игру",
+    joinRoom: "Войти по коду",
     yourName: "Ваше имя",
     roomCode: "Код комнаты",
-    enterCode: "Введите код",
-    create: "Создать",
+    enterCode: "Введите код комнаты",
+    create: "Создать игру",
     join: "Войти",
     start: "Начать игру",
     next: "Следующая карточка",
@@ -22,26 +22,28 @@ const dict = {
     copyLink: "Скопировать ссылку",
     remaining: "Осталось",
     used: "Сыграно",
-    lobby: "Ожидание участников",
+    lobby: "Ожидание старта игры",
     hostOnly: "Только ведущий",
-    level_easy: "Лёгкий",
-    level_medium: "Средний",
-    level_hard: "Хард",
+    level_easy: "★",
+    level_medium: "★★",
+    level_hard: "★★★",
     roomNotFound: "Комната не найдена",
     linkCopied: "Ссылка скопирована",
     loading: "Загрузка…",
     host: "Ведущий",
     genericError: "Что-то пошло не так",
-    waitingHost: "Ведущий выберет карточку",
+    waitingHost: "Ожидание ведущего…",
+    card_action: "Действие",
+    card_question: "Вопрос",
   },
   en: {
-    appTitle: "Party Cards",
-    createRoom: "Create room",
-    joinRoom: "Join room",
+    appTitle: "KINKI CARDS",
+    createRoom: "Create game",
+    joinRoom: "Join by code",
     yourName: "Your name",
     roomCode: "Room code",
-    enterCode: "Enter code",
-    create: "Create",
+    enterCode: "Enter room code",
+    create: "Create game",
     join: "Join",
     start: "Start game",
     next: "Next card",
@@ -51,17 +53,19 @@ const dict = {
     copyLink: "Copy link",
     remaining: "Remaining",
     used: "Played",
-    lobby: "Waiting for players",
+    lobby: "Waiting for game start",
     hostOnly: "Host only",
-    level_easy: "Easy",
-    level_medium: "Medium",
-    level_hard: "Hard",
+    level_easy: "★",
+    level_medium: "★★",
+    level_hard: "★★★",
     roomNotFound: "Room not found",
     linkCopied: "Link copied",
     loading: "Loading…",
     host: "Host",
     genericError: "Something went wrong",
-    waitingHost: "Waiting for the host",
+    waitingHost: "Waiting for the host…",
+    card_action: "Action",
+    card_question: "Question",
   },
 } as const;
 
@@ -76,12 +80,13 @@ const listeners = new Set<() => void>();
 
 function readLang(): Lang {
   const saved = localStorage.getItem(STORAGE_KEY);
-  return saved === "en" ? "en" : "ru";
+  return saved === "ru" ? "ru" : "en";
 }
 
 function getServerLang(): Lang {
-  return "ru";
+  return "en";
 }
+
 
 function subscribeLang(listener: () => void) {
   listeners.add(listener);

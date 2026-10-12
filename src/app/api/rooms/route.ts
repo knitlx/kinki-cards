@@ -2,8 +2,8 @@ import { supabaseAdmin } from "@/lib/supabase/server";
 import { json, err, randomCode, randomSecret } from "@/lib/api";
 
 export async function POST(req: Request) {
-  const { name } = await req.json().catch(() => ({}));
-  if (!name?.trim()) return err("name_required");
+  const body = await req.json().catch(() => ({}));
+  const hostName = (typeof body?.name === "string" && body.name.trim()) || "Host";
 
   const db = supabaseAdmin();
   let code = randomCode();
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   const { data: host } = await db
     .from("participants")
-    .insert({ room_code: code, name: name.trim(), is_host: true })
+    .insert({ room_code: code, name: hostName, is_host: true })
     .select("id")
     .single();
 
