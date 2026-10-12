@@ -44,49 +44,27 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 p-4 py-8">
-      <div className="flex flex-col items-center gap-2 pb-2 text-center">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 p-4 py-10">
+      <div className="flex flex-col items-center gap-2 pb-4 text-center">
         <h1 className="text-4xl font-black uppercase tracking-tight text-foreground sm:text-5xl">
           KINKI <span className="text-accent">CARDS</span>
         </h1>
-        <p className="text-sm font-medium tracking-wide text-muted">
-          Party game · Synchronized in realtime
-        </p>
       </div>
 
-      <form
-        onSubmit={createRoom}
-        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-xl shadow-black/40 backdrop-blur-md"
-      >
-        <div className="flex flex-col gap-1">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted">Host</p>
-          <h2 className="text-xl font-bold text-foreground">{t("createRoom")}</h2>
-          <p className="text-xs text-muted">Start a new game as host</p>
-        </div>
+      <form onSubmit={createRoom}>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-13 rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
+          className="min-h-14 w-full rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
         >
           {busy ? t("loading") : t("createRoom")}
         </button>
       </form>
 
-      <div className="flex items-center gap-4">
-        <div className="h-px flex-1 bg-border/30" />
-        <span className="text-xs font-bold uppercase tracking-widest text-muted">or</span>
-        <div className="h-px flex-1 bg-border/30" />
-      </div>
-
       <form
         onSubmit={joinRoom}
-        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface/60 p-6 text-center shadow-lg shadow-black/30 backdrop-blur-md"
+        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-lg shadow-black/30 backdrop-blur-md"
       >
-        <div className="flex flex-col gap-1">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted">Guest</p>
-          <h2 className="text-xl font-bold text-foreground">{t("joinRoom")}</h2>
-          <p className="text-xs text-muted">Join an existing room using code</p>
-        </div>
         <label className="flex flex-col gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
           {t("enterCode")}
           <input
