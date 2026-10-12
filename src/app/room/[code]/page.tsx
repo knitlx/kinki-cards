@@ -73,18 +73,18 @@ function Room() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-4">
       {state.status === "lobby" ? (
         <div className="flex flex-col gap-6 py-6">
-          <section className="flex flex-col items-center gap-3 rounded-3xl border border-red-950/40 bg-zinc-900/50 p-8 text-center shadow-xl backdrop-blur-md">
-            <p className="text-xs font-bold uppercase tracking-widest text-zinc-400">
+          <section className="flex flex-col items-center gap-3 rounded-3xl border border-border/40 bg-surface p-8 text-center shadow-xl shadow-black/40 backdrop-blur-md">
+            <p className="text-xs font-bold uppercase tracking-widest text-muted">
               {t("roomCode")}
             </p>
-            <p className="text-5xl font-black tracking-[0.3em] text-white">
+            <p className="text-5xl font-black tracking-[0.3em] text-foreground">
               {state.code}
             </p>
           </section>
           <button
             type="button"
             onClick={copyLink}
-            className="min-h-12 rounded-2xl border border-zinc-800 bg-zinc-900/80 px-5 py-3 text-base font-bold text-zinc-200 transition-colors hover:border-zinc-700 hover:text-white active:scale-[0.98]"
+            className="min-h-12 rounded-2xl border border-border/40 bg-surface-raised px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-surface-raised/70 active:scale-[0.98]"
           >
             {copied ? t("linkCopied") : t("copyLink")}
           </button>
@@ -92,13 +92,13 @@ function Room() {
             <button
               type="button"
               onClick={startGame}
-              className="min-h-13 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-3 text-lg font-bold text-white shadow-lg shadow-red-950/60 transition-all hover:brightness-110 active:scale-[0.98]"
+              className="min-h-13 rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98]"
             >
               {t("start")}
             </button>
           ) : (
-            <div className="flex items-center justify-center gap-2 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6 text-center text-sm font-semibold text-zinc-400">
-              <span className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+            <div className="flex items-center justify-center gap-2 rounded-2xl border border-border/40 bg-surface/60 p-6 text-center text-sm font-semibold text-muted">
+              <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
               {t("waitingHost")}
             </div>
           )}
@@ -108,16 +108,16 @@ function Room() {
           {state.activeCard ? (
             <CardView card={state.activeCard} lang={lang} />
           ) : (
-            <div className="flex min-h-[48vh] items-center justify-center rounded-3xl border border-dashed border-red-950/50 bg-zinc-900/30 p-6 text-center text-lg font-medium text-zinc-400">
+            <div className="flex min-h-[48vh] items-center justify-center rounded-3xl border border-dashed border-border/40 bg-surface/40 p-6 text-center text-lg font-medium text-muted">
               {deckEmpty ? t("deckEmpty") : t("waitingHost")}
             </div>
           )}
-          <div className="flex justify-center gap-6 text-xs font-bold uppercase tracking-wider text-zinc-500">
+          <div className="flex justify-center gap-6 text-xs font-bold uppercase tracking-wider text-muted">
             <span>
-              {t("remaining")}: <strong className="text-zinc-300">{remaining}</strong>
+              {t("remaining")}: <strong className="text-foreground">{remaining}</strong>
             </span>
             <span>
-              {t("used")}: <strong className="text-zinc-300">{used}</strong>
+              {t("used")}: <strong className="text-foreground">{used}</strong>
             </span>
           </div>
           {isHost && <HostControls code={code} state={state} onUpdateState={updateState} />}

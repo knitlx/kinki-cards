@@ -44,63 +44,80 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-4 py-8">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight uppercase bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-          KINKI <span className="text-rose-600">CARDS</span>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 p-4 py-8">
+      <div className="flex flex-col items-center gap-2 pb-2 text-center">
+        <h1 className="text-4xl font-black uppercase tracking-tight text-foreground sm:text-5xl">
+          KINKI <span className="text-accent">CARDS</span>
         </h1>
-        <p className="text-sm font-medium text-zinc-400">
-          Party game • Synchronized in realtime
+        <p className="text-sm font-medium tracking-wide text-muted">
+          Party game · Synchronized in realtime
         </p>
       </div>
 
       <form
         onSubmit={createRoom}
-        className="flex flex-col gap-4 rounded-3xl border border-red-950/40 bg-zinc-900/60 p-6 text-center shadow-xl backdrop-blur-md transition-all hover:border-red-900/60"
+        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-xl shadow-black/40 backdrop-blur-md"
       >
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold text-zinc-100">{t("createRoom")}</h2>
-          <p className="text-xs text-zinc-400">Start a new game as host</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted">Host</p>
+          <h2 className="text-xl font-bold text-foreground">{t("createRoom")}</h2>
+          <p className="text-xs text-muted">Start a new game as host</p>
         </div>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-13 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-3 text-lg font-bold text-white shadow-lg shadow-red-950/60 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-40"
+          className="min-h-13 rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
         >
           {busy ? t("loading") : t("createRoom")}
         </button>
       </form>
 
+      <div className="flex items-center gap-4">
+        <div className="h-px flex-1 bg-border/30" />
+        <span className="text-xs font-bold uppercase tracking-widest text-muted">or</span>
+        <div className="h-px flex-1 bg-border/30" />
+      </div>
+
       <form
         onSubmit={joinRoom}
-        className="flex flex-col gap-4 rounded-3xl border border-zinc-800/80 bg-zinc-900/40 p-6 text-center shadow-lg backdrop-blur-md transition-all hover:border-zinc-700"
+        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface/60 p-6 text-center shadow-lg shadow-black/30 backdrop-blur-md"
       >
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-bold text-zinc-100">{t("joinRoom")}</h2>
-          <p className="text-xs text-zinc-400">Join an existing room using code</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted">Guest</p>
+          <h2 className="text-xl font-bold text-foreground">{t("joinRoom")}</h2>
+          <p className="text-xs text-muted">Join an existing room using code</p>
         </div>
-        <label className="flex flex-col gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        <label className="flex flex-col gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
           {t("enterCode")}
           <input
+            name="roomCode"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             autoCapitalize="characters"
+            autoComplete="off"
+            spellCheck={false}
+            inputMode="text"
             placeholder="ABCD"
             maxLength={6}
-            className="w-full rounded-2xl border border-zinc-800 bg-zinc-950/80 px-4 py-3 text-center text-2xl font-bold tracking-[0.25em] text-white outline-none transition-all placeholder:text-zinc-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+            className="w-full rounded-2xl border border-border/40 bg-background/80 px-4 py-3 text-center text-2xl font-bold tracking-[0.25em] text-foreground placeholder:text-muted/60 transition-colors focus-visible:border-accent"
           />
         </label>
         <button
           type="submit"
           disabled={busy || !code.trim()}
-          className="min-h-12 rounded-2xl border border-zinc-700 bg-zinc-800/80 px-5 py-3 text-base font-bold text-zinc-100 transition-all hover:bg-zinc-700 active:scale-[0.98] disabled:opacity-40"
+          className="min-h-12 rounded-2xl border border-border/40 bg-surface-raised px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-surface-raised/70 active:scale-[0.98] disabled:opacity-40"
         >
           {t("join")}
         </button>
       </form>
 
-      {error && <p className="text-center text-sm font-semibold text-rose-500">{error}</p>}
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-center text-sm font-semibold text-accent"
+      >
+        {error}
+      </p>
     </main>
   );
-
 }
