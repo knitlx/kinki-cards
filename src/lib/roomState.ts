@@ -82,7 +82,7 @@ type RoomRpcRow = {
 };
 
 async function callRoomRpc(
-  fn: "next_card" | "reshuffle_room",
+  fn: "next_card" | "reshuffle_room" | "start_room",
   code: string,
   hostSecret: string,
 ): Promise<RoomState> {
@@ -112,6 +112,10 @@ export function drawNextCard(code: string, hostSecret: string) {
 
 export function reshuffleRoom(code: string, hostSecret: string) {
   return callRoomRpc("reshuffle_room", code, hostSecret);
+}
+
+export function startRoom(code: string, hostSecret: string) {
+  return callRoomRpc("start_room", code, hostSecret);
 }
 
 export async function pushRoomState(code: string) {

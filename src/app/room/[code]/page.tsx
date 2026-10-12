@@ -7,6 +7,7 @@ import HostControls from "@/components/HostControls";
 import RoomQr from "@/components/RoomQr";
 import { useI18n } from "@/lib/i18n";
 import { useRoom } from "@/lib/useRoom";
+import type { RoomState } from "@/lib/types";
 
 const noopSubscribe = () => () => {};
 
@@ -25,7 +26,7 @@ export default function RoomPage() {
 
 function Room() {
   const { code } = useParams<{ code: string }>();
-  const { state, refresh, updateState, notFound } = useRoom(code);
+  const { state, updateState, notFound } = useRoom(code);
   const { t, lang } = useI18n();
   const [copied, setCopied] = useState(false);
   const isHost = useSyncExternalStore(
@@ -37,11 +38,11 @@ function Room() {
   async function startGame() {
     const secret = localStorage.getItem(`party:hostSecret:${code}`);
     if (!secret) return;
-    await fetch(`/api/rooms/${code}/start`, {
+    const res = await fetch(`/api/rooms/${code}/start`, {
       method: "POST",
       headers: { "x-host-secret": secret },
     });
-    await refresh();
+    if (res.ok) updateState((await res.json()) as RoomState);
   }
 
   async function copyLink() {

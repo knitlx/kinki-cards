@@ -1,18 +1,17 @@
-import { supabaseAdmin } from "@/lib/supabase/server";
-import { pushRoomState } from "@/lib/roomState";
-import { json, err, isHost } from "@/lib/api";
+import { startRoom } from "@/lib/roomState";
+import { json, err } from "@/lib/api";
 
 export async function POST(req: Request, { params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   const roomCode = code.toUpperCase();
-  const db = supabaseAdmin();
-  const { data: room } = await db.from("rooms").select("host_secret").eq("code", roomCode).maybeSingle();
-  if (!room) return err("room_not_found", 404);
-  if (!isHost(req, room.host_secret)) return err("forbidden", 403);
+  const secret = req.headers.get("x-host-secret") ?? "";
 
-  const { error } = await db.rpc("start_game", { p_room_code: roomCode });
-  if (error) return err(error.message, 500);
-
-  const state = await pushRoomState(roomCode);
-  return json(state);
+  try {
+    return json(await startRoom(roomCode, secret));
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "server_error";
+    if (message === "room_not_found") return err(message, 404);
+    if (message === "forbidden") return err(message, 403);
+    return err(message, 500);
+  }
 }
