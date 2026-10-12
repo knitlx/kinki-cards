@@ -5,25 +5,6 @@ import type { Card, Level } from "@/lib/types";
 
 const LEVEL_STARS: Record<Level, number> = { easy: 1, medium: 2, hard: 3 };
 
-function detectKind(body: string): "action" | "question" {
-  const b = body.trim();
-  if (
-    b.startsWith("Расскажи") ||
-    b.startsWith("Спроси") ||
-    b.startsWith("Задай вопрос") ||
-    b.startsWith("Был ли") ||
-    b.startsWith("Как тебе") ||
-    b.startsWith("Какой") ||
-    b.startsWith("Какая") ||
-    b.includes("и спроси") ||
-    b.includes("Обсудите") ||
-    b.includes("Поговорите с этим игроком")
-  ) {
-    return "question";
-  }
-  return "action";
-}
-
 function CornerIndex({
   level,
   label,
@@ -55,8 +36,7 @@ function CornerIndex({
 export default function CardView({ card, lang }: { card: Card; lang: "ru" | "en" }) {
   const { t } = useI18n();
   const body = lang === "en" ? (card.bodyEn ?? card.body) : card.body;
-  const kind = card.kind ?? detectKind(card.body);
-  const label = t(`card_${kind}`);
+  const label = t(`card_${card.kind}`);
 
   return (
     <div className="relative mx-3 pb-3">

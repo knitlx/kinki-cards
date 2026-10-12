@@ -31,14 +31,14 @@ export default function Home() {
       hostSecret: string;
     };
     localStorage.setItem(`party:hostSecret:${data.code}`, data.hostSecret);
+    setBusy(false);
     router.push(`/room/${data.code}`);
   }
 
   async function joinRoom(e: FormEvent) {
     e.preventDefault();
     const roomCode = code.trim().toUpperCase();
-    if (!roomCode || busy) return;
-    setBusy(true);
+    if (!roomCode) return;
     setError(null);
     router.push(`/room/${roomCode}`);
   }

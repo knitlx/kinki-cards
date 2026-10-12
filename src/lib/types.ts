@@ -11,7 +11,7 @@ export type Card = {
   body: string;
   bodyEn: string | null;
   sort: number;
-  kind?: CardKind;
+  kind: CardKind;
 };
 
 export type RoomState = {

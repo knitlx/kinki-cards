@@ -73,21 +73,27 @@ export async function getRoomState(code: string): Promise<RoomState | null> {
   };
 }
 
-export async function drawNextCard(code: string, hostSecret: string): Promise<RoomState> {
+type RoomRpcRow = {
+  code: string;
+  status: RoomState["status"];
+  current_level: Level;
+  active_card_id: string | null;
+  counts: RoomState["counts"];
+};
+
+async function callRoomRpc(
+  fn: "next_card" | "reshuffle_room",
+  code: string,
+  hostSecret: string,
+): Promise<RoomState> {
   const db = supabaseAdmin();
-  const { data, error } = await db.rpc("next_card", {
+  const { data, error } = await db.rpc(fn, {
     p_room_code: code,
     p_host_secret: hostSecret,
   });
   if (error) throw new Error(error.message);
 
-  const row = data as {
-    code: string;
-    status: RoomState["status"];
-    current_level: Level;
-    active_card_id: string | null;
-    counts: RoomState["counts"];
-  };
+  const row = data as RoomRpcRow;
   const cardsMap = await getCardsMap();
   const state: RoomState = {
     code: row.code,
@@ -100,10 +106,18 @@ export async function drawNextCard(code: string, hostSecret: string): Promise<Ro
   return state;
 }
 
+export function drawNextCard(code: string, hostSecret: string) {
+  return callRoomRpc("next_card", code, hostSecret);
+}
+
+export function reshuffleRoom(code: string, hostSecret: string) {
+  return callRoomRpc("reshuffle_room", code, hostSecret);
+}
+
 export async function pushRoomState(code: string) {
   const state = await getRoomState(code);
   if (state) {
-    void broadcastRoomState(code, state).catch(console.error);
+    await broadcastRoomState(code, state).catch(console.error);
   }
   return state;
 }
