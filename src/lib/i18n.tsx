@@ -7,9 +7,11 @@ export type Lang = "ru" | "en";
 const dict = {
   ru: {
     createRoom: "Создать игру",
-    joinAsGuest: "Войти как гость",
+    hostRole: "Ведущий",
+    guestRole: "Участник",
+    join: "Войти",
     roomCode: "Код комнаты",
-    enterCode: "Введите код комнаты",
+    enterCode: "Код комнаты",
     start: "Начать игру",
     next: "Следующая карточка",
     reshuffle: "Замешать сброс",
@@ -30,9 +32,11 @@ const dict = {
   },
   en: {
     createRoom: "Create game",
-    joinAsGuest: "Join as guest",
+    hostRole: "Host",
+    guestRole: "Guest",
+    join: "Join",
     roomCode: "Room code",
-    enterCode: "Enter room code",
+    enterCode: "Room code",
     start: "Start game",
     next: "Next card",
     reshuffle: "Reshuffle discard",

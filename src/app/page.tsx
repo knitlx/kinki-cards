@@ -44,50 +44,58 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 p-4 py-10">
-      <div className="flex flex-col items-center gap-2 pb-4 text-center">
-        <h1 className="text-4xl font-black uppercase tracking-tight text-foreground sm:text-5xl">
-          KINKI <span className="text-accent">CARDS</span>
-        </h1>
-      </div>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-4 py-10">
+      <h1 className="pb-2 text-center text-4xl font-black uppercase tracking-tight text-foreground sm:text-5xl">
+        KINKI <span className="text-accent">CARDS</span>
+      </h1>
 
-      <form onSubmit={createRoom}>
-        <button
-          type="submit"
-          disabled={busy}
-          className="min-h-14 w-full rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
-        >
-          {busy ? t("loading") : t("createRoom")}
-        </button>
-      </form>
+      <section className="flex flex-col gap-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted">
+          {t("hostRole")}
+        </p>
+        <form onSubmit={createRoom}>
+          <button
+            type="submit"
+            disabled={busy}
+            className="min-h-14 w-full rounded-2xl bg-accent px-5 py-3 text-lg font-bold text-foreground shadow-lg shadow-accent/20 transition-colors hover:bg-accent/90 active:scale-[0.98] disabled:opacity-40"
+          >
+            {busy ? t("loading") : t("createRoom")}
+          </button>
+        </form>
+      </section>
 
-      <form
-        onSubmit={joinRoom}
-        className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-lg shadow-black/30 backdrop-blur-md"
-      >
-        <label className="flex flex-col gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
-          {t("enterCode")}
-          <input
-            name="roomCode"
-            value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
-            autoCapitalize="characters"
-            autoComplete="off"
-            spellCheck={false}
-            inputMode="text"
-            placeholder="ABCD"
-            maxLength={6}
-            className="w-full rounded-2xl border border-border/40 bg-background/80 px-4 py-3 text-center text-2xl font-bold tracking-[0.25em] text-foreground placeholder:text-muted/60 transition-colors focus-visible:border-accent"
-          />
-        </label>
-        <button
-          type="submit"
-          disabled={busy || !code.trim()}
-          className="min-h-12 rounded-2xl border border-border/40 bg-surface-raised px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-surface-raised/70 active:scale-[0.98] disabled:opacity-40"
+      <section className="flex flex-col gap-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-muted">
+          {t("guestRole")}
+        </p>
+        <form
+          onSubmit={joinRoom}
+          className="flex flex-col gap-4 rounded-3xl border border-border/40 bg-surface p-6 shadow-lg shadow-black/30 backdrop-blur-md"
         >
-          {t("joinAsGuest")}
-        </button>
-      </form>
+          <label className="flex flex-col gap-1.5 text-center text-xs font-semibold uppercase tracking-wider text-muted">
+            {t("enterCode")}
+            <input
+              name="roomCode"
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellCheck={false}
+              inputMode="text"
+              placeholder="ABCDE"
+              maxLength={5}
+              className="w-full rounded-2xl border border-border/40 bg-background/80 px-4 py-3 text-center text-2xl font-bold tracking-[0.25em] text-foreground placeholder:text-muted/60 transition-colors focus-visible:border-accent"
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={busy || !code.trim()}
+            className="min-h-12 w-full rounded-2xl border border-border/40 bg-surface-raised px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-surface-raised/70 active:scale-[0.98] disabled:opacity-40"
+          >
+            {t("join")}
+          </button>
+        </form>
+      </section>
 
       <p
         role="status"
