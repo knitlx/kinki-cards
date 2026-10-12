@@ -28,22 +28,16 @@ export default function CardView({ card, lang }: { card: Card; lang: "ru" | "en"
   const kind = card.kind ?? detectKind(card.body);
 
   return (
-    <article className="relative flex min-h-[48vh] flex-col items-center justify-center gap-8 rounded-3xl border border-red-950/50 bg-gradient-to-b from-zinc-900 via-zinc-900/90 to-zinc-950 p-6 sm:p-8 text-center shadow-2xl shadow-red-950/30 backdrop-blur-md transition-all">
+    <article className="relative flex min-h-[48vh] flex-col items-center justify-center gap-8 overflow-hidden rounded-3xl border border-border/40 bg-surface p-6 text-center shadow-2xl shadow-accent/10 backdrop-blur-md sm:p-8">
       <div className="flex flex-wrap items-center justify-center gap-2.5">
-        <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/25 bg-amber-500/10 px-4 py-1.5 text-base font-black tracking-widest text-amber-400 shadow-sm">
+        <span className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/15 px-4 py-1.5 text-base font-black tracking-widest text-accent">
           {t(`level_${card.level}`)}
         </span>
-        <span
-          className={`inline-flex items-center rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-wider ${
-            kind === "question"
-              ? "border border-zinc-700 bg-zinc-800/90 text-zinc-300"
-              : "border border-rose-500/40 bg-rose-500/15 text-rose-400 shadow-[0_0_12px_rgba(225,29,72,0.25)]"
-          }`}
-        >
+        <span className="inline-flex items-center rounded-full border border-border/40 bg-surface-raised px-4 py-1.5 text-xs font-black uppercase tracking-wider text-muted">
           {t(`card_${kind}`)}
         </span>
       </div>
-      <p className="max-w-md text-2xl font-medium leading-relaxed text-zinc-100 sm:text-3xl sm:leading-relaxed">
+      <p className="max-w-md break-words text-2xl font-medium leading-relaxed text-foreground sm:text-3xl sm:leading-relaxed">
         {body}
       </p>
     </article>
