@@ -44,7 +44,7 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-4 py-10">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 p-4 py-10">
       <h1 className="pb-2 text-center text-4xl font-black uppercase tracking-tight text-foreground sm:text-5xl">
         KINKI <span className="text-accent">CARDS</span>
       </h1>

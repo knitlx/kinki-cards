@@ -4,6 +4,7 @@ import { Suspense, useState, useSyncExternalStore } from "react";
 import { useParams } from "next/navigation";
 import CardView from "@/components/CardView";
 import HostControls from "@/components/HostControls";
+import RoomQr from "@/components/RoomQr";
 import { useI18n } from "@/lib/i18n";
 import { useRoom } from "@/lib/useRoom";
 
@@ -80,6 +81,7 @@ function Room() {
             <p className="text-5xl font-black tracking-[0.3em] text-foreground">
               {state.code}
             </p>
+            <RoomQr />
           </section>
           <button
             type="button"
@@ -112,13 +114,18 @@ function Room() {
               {deckEmpty ? t("deckEmpty") : t("waitingHost")}
             </div>
           )}
-          <div className="flex justify-center gap-6 text-xs font-bold uppercase tracking-wider text-muted">
-            <span>
-              {t("remaining")}: <strong className="text-foreground">{remaining}</strong>
-            </span>
-            <span>
-              {t("used")}: <strong className="text-foreground">{used}</strong>
-            </span>
+          <div
+            role="progressbar"
+            aria-label={t("used")}
+            aria-valuemin={0}
+            aria-valuemax={used + remaining}
+            aria-valuenow={used}
+            className="h-1 w-full overflow-hidden rounded-full bg-surface-raised"
+          >
+            <div
+              className="h-full rounded-full bg-accent transition-[width] duration-500"
+              style={{ width: `${used + remaining ? (used / (used + remaining)) * 100 : 0}%` }}
+            />
           </div>
           {isHost && <HostControls code={code} state={state} onUpdateState={updateState} />}
         </>
