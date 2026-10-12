@@ -73,6 +73,33 @@ export async function getRoomState(code: string): Promise<RoomState | null> {
   };
 }
 
+export async function drawNextCard(code: string, hostSecret: string): Promise<RoomState> {
+  const db = supabaseAdmin();
+  const { data, error } = await db.rpc("next_card", {
+    p_room_code: code,
+    p_host_secret: hostSecret,
+  });
+  if (error) throw new Error(error.message);
+
+  const row = data as {
+    code: string;
+    status: RoomState["status"];
+    current_level: Level;
+    active_card_id: string | null;
+    counts: RoomState["counts"];
+  };
+  const cardsMap = await getCardsMap();
+  const state: RoomState = {
+    code: row.code,
+    status: row.status,
+    currentLevel: row.current_level,
+    activeCard: row.active_card_id ? (cardsMap.get(row.active_card_id) ?? null) : null,
+    counts: row.counts,
+  };
+  await broadcastRoomState(code, state).catch(console.error);
+  return state;
+}
+
 export async function pushRoomState(code: string) {
   const state = await getRoomState(code);
   if (state) {

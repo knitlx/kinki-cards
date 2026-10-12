@@ -1,7 +1,9 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n";
-import type { Card } from "@/lib/types";
+import type { Card, Level } from "@/lib/types";
+
+const LEVEL_STARS: Record<Level, number> = { easy: 1, medium: 2, hard: 3 };
 
 function detectKind(body: string): "action" | "question" {
   const b = body.trim();
@@ -22,11 +24,39 @@ function detectKind(body: string): "action" | "question" {
   return "action";
 }
 
+function CornerIndex({
+  level,
+  label,
+  rotated,
+}: {
+  level: Level;
+  label: string;
+  rotated?: boolean;
+}) {
+  const count = LEVEL_STARS[level];
+  return (
+    <div
+      className={`relative flex items-start justify-between gap-4 text-left ${rotated ? "rotate-180" : ""}`}
+    >
+      <span role="img" aria-label={`${count} / 3`} className="flex text-xl leading-none">
+        {Array.from({ length: count }, (_, i) => (
+          <span key={i} className="text-accent">
+            ★
+          </span>
+        ))}
+      </span>
+      <span className="pt-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-muted">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 export default function CardView({ card, lang }: { card: Card; lang: "ru" | "en" }) {
   const { t } = useI18n();
   const body = lang === "en" ? (card.bodyEn ?? card.body) : card.body;
   const kind = card.kind ?? detectKind(card.body);
-  const level = t(`level_${card.level}`);
+  const label = t(`card_${kind}`);
 
   return (
     <div className="relative mx-3 pb-3">
@@ -44,23 +74,16 @@ export default function CardView({ card, lang }: { card: Card; lang: "ru" | "en"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(245,245,244,0.035)_0_1px,transparent_1px_14px)]"
+          className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(135deg,rgba(245,245,244,0.06)_0_1px,transparent_1px_12px)]"
         />
-        <div className="relative flex items-start justify-between gap-4 text-left">
-          <span className="text-xl font-black tracking-widest text-accent">{level}</span>
-          <span className="pt-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-muted">
-            {t(`card_${kind}`)}
-          </span>
+        <CornerIndex level={card.level} label={label} />
+        <div className="relative my-auto flex flex-col items-center gap-8 py-8">
+          <div aria-hidden className="h-0.5 w-12 rounded-full bg-accent" />
+          <p className="max-w-md break-words text-2xl font-medium leading-relaxed text-foreground sm:text-3xl sm:leading-relaxed">
+            {body}
+          </p>
         </div>
-        <p className="relative my-auto max-w-md break-words py-8 text-2xl font-medium leading-relaxed text-foreground sm:text-3xl sm:leading-relaxed">
-          {body}
-        </p>
-        <div className="relative flex rotate-180 items-start justify-between gap-4 text-left">
-          <span className="text-xl font-black tracking-widest text-accent">{level}</span>
-          <span className="pt-1.5 text-[11px] font-black uppercase tracking-[0.25em] text-muted">
-            {t(`card_${kind}`)}
-          </span>
-        </div>
+        <CornerIndex level={card.level} label={label} rotated />
       </article>
     </div>
   );
