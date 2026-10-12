@@ -6,7 +6,6 @@ import type { RoomState } from "./types";
 
 export function useRoom(code: string) {
   const [state, setState] = useState<RoomState | null>(null);
-  const [online, setOnline] = useState<string[]>([]);
   const [notFound, setNotFound] = useState(false);
 
   const refresh = useCallback(async () => {
@@ -37,23 +36,13 @@ export function useRoom(code: string) {
       const { supabaseBrowser } = await import("./supabase/browser");
       if (cancelled) return;
       client = supabaseBrowser;
-      const ch = supabaseBrowser.channel(`room:${code}`, {
-        config: { presence: { key: crypto.randomUUID() } },
-      });
+      const ch = supabaseBrowser.channel(`room:${code}`);
       channel = ch;
       ch.on("broadcast", { event: "room:state" }, ({ payload }) => {
         setState(payload as RoomState);
       });
-      ch.on("presence", { event: "sync" }, () => {
-        setOnline(
-          Object.values(ch.presenceState<{ name: string }>())
-            .flat()
-            .map((p) => p.name),
-        );
-      });
       ch.subscribe((status) => {
         if (status === "SUBSCRIBED") {
-          ch.track({ name: localStorage.getItem("party:name") ?? "guest" });
           refresh();
         }
       });
@@ -65,5 +54,5 @@ export function useRoom(code: string) {
     };
   }, [code, refresh]);
 
-  return { state, online, refresh, updateState, notFound };
+  return { state, refresh, updateState, notFound };
 }

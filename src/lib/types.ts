@@ -14,13 +14,10 @@ export type Card = {
   kind?: CardKind;
 };
 
-export type Participant = { id: string; name: string; isHost: boolean };
-
 export type RoomState = {
   code: string;
   status: RoomStatus;
   currentLevel: Level;
   activeCard: Card | null;
   counts: Record<Level, { remaining: number; used: number }>;
-  participants: Participant[];
 };

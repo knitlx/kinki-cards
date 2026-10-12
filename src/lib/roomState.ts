@@ -70,7 +70,6 @@ export async function getRoomState(code: string): Promise<RoomState | null> {
     currentLevel: room.current_level as Level,
     activeCard,
     counts,
-    participants: [],
   };
 }
 

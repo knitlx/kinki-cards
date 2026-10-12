@@ -85,7 +85,7 @@ export default function Home() {
           disabled={busy || !code.trim()}
           className="min-h-12 rounded-2xl border border-border/40 bg-surface-raised px-5 py-3 text-base font-bold text-foreground transition-colors hover:bg-surface-raised/70 active:scale-[0.98] disabled:opacity-40"
         >
-          {t("join")}
+          {t("joinAsGuest")}
         </button>
       </form>
 
