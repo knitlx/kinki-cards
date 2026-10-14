@@ -29,6 +29,17 @@ const dict = {
     waitingHost: "Ожидание ведущего…",
     card_action: "Действие",
     card_question: "Вопрос",
+    rules: "Правила игры",
+    rulesTitle: "Правила игры",
+    rulesGotIt: "Понятно",
+    rulesMain: "Главное правило: всем должно быть комфортно.",
+    rule_1: "Участники ходят по кругу.",
+    rule_2: "Ведущий выбирает уровень сложности с учётом настроения группы.",
+    rule_3: "Любую карточку можно пропустить без объяснения причин.",
+    rule_4:
+      "Перед физическим контактом убедитесь, что партнёр согласен. Любой участник может передумать в любой момент.",
+    rule_5: "Уважайте чужие границы и отказы. Не давите на других и не уговаривайте их.",
+    rule_6: "Можно повторно выбирать одного и того же партнёра, если желание взаимно.",
   },
   en: {
     createRoom: "Create game",
@@ -54,6 +65,17 @@ const dict = {
     waitingHost: "Waiting for the host…",
     card_action: "Action",
     card_question: "Question",
+    rules: "Rules",
+    rulesTitle: "How to play",
+    rulesGotIt: "Got it",
+    rulesMain: "The main rule: everyone should be comfortable.",
+    rule_1: "Players take turns in a circle.",
+    rule_2: "The host picks the difficulty level based on the group's mood.",
+    rule_3: "Any card can be skipped without giving a reason.",
+    rule_4:
+      "Before any physical contact, make sure your partner agrees. Anyone can change their mind at any time.",
+    rule_5: "Respect other people's boundaries and refusals. Don't pressure or coax others.",
+    rule_6: "You can pick the same partner again if the desire is mutual.",
   },
 } as const;
 

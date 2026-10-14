@@ -1,11 +1,12 @@
 "use client";
 
-import { Suspense, useState, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useParams } from "next/navigation";
 import CardView from "@/components/CardView";
 import HostControls from "@/components/HostControls";
 import RoomQr from "@/components/RoomQr";
 import { useI18n } from "@/lib/i18n";
+import { useRules } from "@/lib/rules";
 import { useRoom } from "@/lib/useRoom";
 import type { RoomState } from "@/lib/types";
 
@@ -28,12 +29,21 @@ function Room() {
   const { code } = useParams<{ code: string }>();
   const { state, updateState, notFound } = useRoom(code);
   const { t, lang } = useI18n();
+  const { openRules } = useRules();
   const [copied, setCopied] = useState(false);
   const isHost = useSyncExternalStore(
     noopSubscribe,
     () => !!localStorage.getItem(`party:hostSecret:${code}`),
     () => false,
   );
+  const rulesOpened = useRef(false);
+
+  useEffect(() => {
+    if (state?.status === "lobby" && !rulesOpened.current) {
+      rulesOpened.current = true;
+      openRules();
+    }
+  }, [state?.status, openRules]);
 
   async function startGame() {
     const secret = localStorage.getItem(`party:hostSecret:${code}`);
